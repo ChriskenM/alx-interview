@@ -5,26 +5,36 @@ a method that determines if all the boxes can be opened.
 
 
 def canUnlockAll(boxes):
-    """Checks if all boxes can be opened."""
-    if not boxes:
-        return False
+    """
+    Check if all boxes can be opened.
+    """
 
-    # Initializes a set to keep track of opened boxes
-    opened_boxes = {0}
+    # If there are no boxes, returns True
+    if len(boxes) == 0:
+        return True
 
-    # Initializes a list to keep track of keys
-    keys = boxes[0]
+    # Initializes sets to keep track of keys
+    keys = set()
+    new_keys = set(boxes[0])
 
-    # Loops through the keys and boxes
-    while keys:
-        # Gets the next key
-        key = keys.pop(0)
+    # Loops until there are no more new keys to explore
+    while len(new_keys):
+        # Adds new keys to the key set
+        keys = keys | new_keys
+        new_keys = set()
 
-        # Checks if the key can open a new box
-        if key < len(boxes) and key not in opened_boxes:
-            opened_boxes.add(key)
-            keys.extend(boxes[key])
+        # Checks if all boxes can be opened
+        if keys & set(range(1, len(boxes))) == set(range(1, len(boxes))):
+            return True
 
-    # Checks if all boxes are opened
-    return len(opened_boxes) == len(boxes)
+        # Uses current keys to find new keys
+        for x in keys:
+            # Checks if the key corresponds to a valid box index
+            if x < len(boxes):
+                # Adds keys found in the current box to new_keys
+                for y in boxes[x]:
+                    if y not in keys:
+                        new_keys.add(y)
 
+    # If the loop completes without finding a solution, returns False
+    return False
