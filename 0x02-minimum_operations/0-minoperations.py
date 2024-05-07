@@ -19,15 +19,26 @@ def minOperations(n):
              Returns 0 if n is impossible to achieve.
     """
 
-    # outputs should be at least 2 char: (min, Copy All => Paste)
-    if n < 2:
+    if type(n) is not int or n <= 1:
         return 0
-    operations, root = 0, 2
-    while root <= n:
-        if n % root == 0:
-            operationss += root
-            # set n to the remainder
-            n = n / root
-            root -= 1
-        root += 1
-    return operations
+
+    summation = []
+
+    divisor = 2
+
+    while (n % divisor) is 0 and (n // divisor) is not 1:
+        summation.append(divisor)
+        n = n // divisor
+
+    divisor = 3
+
+    while n > divisor:
+        while (n % divisor) is 0 and (n // divisor) is not 1:
+            summation.append(divisor)
+            n = n // divisor
+
+        divisor += 2
+
+    summation.append(n)
+
+    return sum(summation)
