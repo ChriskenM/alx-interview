@@ -18,12 +18,16 @@ def minOperations(n):
                 n 'H' characters.
              Returns 0 if n is impossible to achieve.
     """
-    if n <= 1:
-        return n
 
-    operations = 0
-    for i in range(2, n + 1):
-        while n % i == 0:
-            operations += i
-            n //= i
+    # outputs should be at least 2 char: (min, Copy All => Paste)
+    if n < 2:
+        return 0
+    operations, root = 0, 2
+    while root <= n:
+        if n % root == 0:
+            operationss += root
+            # set n to the remainder
+            n = n / root
+            root -= 1
+        root += 1
     return operations
