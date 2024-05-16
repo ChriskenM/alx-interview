@@ -1,7 +1,8 @@
 #!/usr/bin/python3
 """
-Log parsing script, reads from stdin and computes metrics.
+Script, reads stdin line by line and computes metrics.
 """
+
 import sys
 
 
@@ -15,35 +16,37 @@ def print_stats(file_size, status_codes):
             print("{}: {}".format(code, status_codes[code]))
 
 
-file_size = 0
-status_codes = {200: 0, 301: 0, 400: 0, 401: 0, 403: 0, 404: 0, 405: 0, 500: 0}
-line_count = 0
-
-try:
-    for line in sys.stdin:
+def parse_line(line, status_codes):
+    """
+    Parses a single line to extract file size and status code.
+    """
+    try:
         parts = line.split()
-        if len(parts) < 9:
-            continue
+        file_size = int(parts[-1])
+        status_code = parts[-2]
+        if status_code in status_codes:
+            status_codes[status_code] += 1
+        return file_size
+    except (IndexError, ValueError):
+        return 0
 
-        try:
-            file_size += int(parts[-1])
-        except ValueError:
-            continue
 
-        try:
-            status_code = int(parts[-2])
-            if status_code in status_codes:
-                status_codes[status_code] += 1
-        except ValueError:
-            continue
+if __name__ == "__main__":
+    status_codes = {
+        "200": 0, "301": 0, "400": 0, "401": 0,
+        "403": 0, "404": 0, "405": 0, "500": 0
+    }
+    file_size = 0
+    line_count = 0
 
-        line_count += 1
+    try:
+        for line in sys.stdin:
+            file_size += parse_line(line, status_codes)
+            line_count += 1
+            if line_count % 10 == 0:
+                print_stats(file_size, status_codes)
+    except KeyboardInterrupt:
+        print_stats(file_size, status_codes)
+        raise
 
-        if line_count % 10 == 0:
-            print_stats(file_size, status_codes)
-
-except KeyboardInterrupt:
     print_stats(file_size, status_codes)
-    raise
-
-print_stats(file_size, status_codes)
