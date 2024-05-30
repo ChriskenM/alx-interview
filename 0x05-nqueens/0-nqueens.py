@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 import sys
 
+
 def is_valid(board, row, col):
     """
     Check if it's safe to place a queen at board[row][col].
-    This is a utility function to check if a queen can be placed on board[row][col].
+    This is a utility function to check if a queen can be placed,
+    on board[row][col].
     """
     for i in range(row):
         if board[i] == col or \
@@ -12,6 +14,7 @@ def is_valid(board, row, col):
            board[i] + i == col + row:
             return False
     return True
+
 
 def solve_nqueens(N, board, row, solutions):
     """
@@ -28,6 +31,7 @@ def solve_nqueens(N, board, row, solutions):
                 board[row] = col
                 solve_nqueens(N, board, row + 1, solutions)
                 board[row] = -1
+
 
 def main():
     if len(sys.argv) != 2:
@@ -50,6 +54,7 @@ def main():
 
     for solution in solutions:
         print(solution)
+
 
 if __name__ == "__main__":
     main()
